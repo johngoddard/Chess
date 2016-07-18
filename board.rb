@@ -1,8 +1,9 @@
 require_relative "piece"
 require_relative "display"
+require_relative "player"
 
 class Board
-  attr_reader :grid
+  attr_reader :grid, :display
 
   def initialize
     @grid = Array.new(8) {Array.new(8)}
@@ -14,7 +15,9 @@ class Board
     @grid.each_with_index do |row, idx|
       row.each_with_index do |place, idx2|
         if [0,1,6,7].include?(idx)
-          row[idx2] = Piece.new()
+          row[idx2] = Piece.new(:white, [idx, idx2], self)
+        else
+          row[idx2] = NullPiece.instance()
         end
       end
     end
@@ -24,7 +27,7 @@ class Board
     raise if self[start_pos] == nil
     to_move = self[start_pos]
     self[end_pos] = to_move
-    self[start_pos] = nil
+    self[start_pos] = NullPiece.instance()
     rescue
       puts "No piece at start position."
 #      retry
@@ -43,6 +46,11 @@ class Board
 
   def render
     @display.render
+    @display.get_input
+  end
+
+  def in_bounds?(pos)
+    pos.all?{|n| n.between?(0,7)}
   end
 
 

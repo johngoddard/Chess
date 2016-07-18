@@ -1,5 +1,4 @@
 require 'colorize'
-require_relative 'board'
 require_relative 'cursorable'
 require 'byebug'
 
@@ -9,6 +8,7 @@ class Display
   def initialize(board)
     @board = board
     @cursor_pos = [0,0]
+    @selected = false
   end
 
   def build_grid
@@ -22,14 +22,29 @@ class Display
   def build_row(row, i)
     row_string = ""
     # debugger if i > 1
-    row.each_with_index do |piece , i|
-      piece.nil? ? row_string << "_" : row_string << piece.to_s
+    row.each_with_index do |piece , j|
+      color_options = colors_for([i, j])
+      row_string << piece.to_s.colorize(color_options)
     end
+
     row_string
   end
 
+  def colors_for(pos)
+    if pos == @cursor_pos
+      bg =  :light_red
+    elsif (pos[0] + pos[1]).odd?
+      bg = :light_blue
+    else
+      bg = :blue
+    end
+    { background: bg, color: :white}
+  end
+
+
   def render
     system("clear")
+
     build_grid.each{|row| puts row}
   end
 end
