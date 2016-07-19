@@ -1,6 +1,9 @@
 require 'singleton'
 
+
 class Piece
+  attr_reader :color
+  attr_accessor :pos
 
   WHITE_PIECE_STRINGS = {
     :king => "\u{2654}",
@@ -38,12 +41,17 @@ class Piece
   def moves
   end
 
+  def dup(board)
+    return self.class.new(@color, @position, board)
+  end
+
 end
 
 class NullPiece < Piece
   include Singleton
 
   def initialize()
+    @color = nil
   end
 
   def to_s
@@ -51,9 +59,18 @@ class NullPiece < Piece
   end
 
   def symbol
+    nil
   end
 
   def moves
+  end
+
+  def color
+    nil
+  end
+
+  def dup(board)
+    self
   end
 
 end
