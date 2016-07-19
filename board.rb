@@ -60,9 +60,7 @@ class Board
 
   def checkmate?(color)
     if self.in_check?(color)
-      my_pieces(color).each do |piece|
-        return false if piece.valid_moves.size > 0
-      end
+      my_pieces(color).each{|piece| return false if piece.valid_moves.size > 0}
       true
     else
       false
