@@ -17,30 +17,6 @@ class Board
     populate
   end
 
-  def populate
-    @grid.each_with_index do |row, idx|
-      if [0, 7].include?(idx)
-        back_row(idx)
-      elsif [1, 6].include?(idx)
-        i = 0
-        color = :white
-        color = :black if idx == 1
-        while i < 8
-          @grid[idx][i] = Pawn.new(color, [idx, i], self)
-          i += 1
-        end
-      end
-    end
-  end
-
-  def back_row(row)
-    color = :white
-    color = :black if row == 0
-    @grid[row] = [Rook.new(color, [row, 0], self), Knight.new(color, [row, 1], self),
-      Bishop.new(color, [row, 2], self), Queen.new(color, [row, 3], self), King.new(color, [row, 4], self),
-      Bishop.new(color, [row, 5], self), Knight.new(color, [row, 6], self), Rook.new(color, [row, 7], self)]
-  end
-
   def move(start_pos, end_pos)
     raise if self[start_pos] == nil
     to_move = self[start_pos]
@@ -49,10 +25,6 @@ class Board
     self[start_pos] = NullPiece.instance()
 
     to_move.pos = end_pos
-
-    rescue
-      puts "No piece at start position."
-
   end
 
   def [](pos)
@@ -78,17 +50,13 @@ class Board
     king_piece = find_king(color)
     threatened_square = king_piece.pos
     valid_moves_array = []
-    
+
     color == :black ? color = :white : color = :black
 
     my_pieces(color).each {|piece| valid_moves_array += piece.moves}
 
     return true if valid_moves_array.include?(threatened_square)
     return false
-  end
-
-  def find_king(color)
-    my_pieces(color).select{|piece| piece.class == King}.first
   end
 
   def checkmate?(color)
@@ -100,10 +68,6 @@ class Board
     else
       false
     end
-  end
-
-  def my_pieces(color)
-    @grid.flatten.select { |piece| piece.color == color}
   end
 
   def dup
@@ -118,5 +82,38 @@ class Board
     dup_board
   end
 
+  private
+
+  def populate
+    @grid.each_with_index do |row, idx|
+      if [0, 7].include?(idx)
+        back_row(idx)
+      elsif [1, 6].include?(idx)
+        i = 0
+        color = :white
+        color = :black if idx == 1
+        while i < 8
+          @grid[idx][i] = Pawn.new(color, [idx, i], self)
+          i += 1
+        end
+      end
+    end
+  end
+
+  def back_row(row)
+    color = :white
+    color = :black if row == 0
+    @grid[row] = [Rook.new(color, [row, 0], self), Knight.new(color, [row, 1], self),
+      Bishop.new(color, [row, 2], self), Queen.new(color, [row, 3], self), King.new(color, [row, 4], self),
+      Bishop.new(color, [row, 5], self), Knight.new(color, [row, 6], self), Rook.new(color, [row, 7], self)]
+  end
+
+  def find_king(color)
+    my_pieces(color).select{|piece| piece.class == King}.first
+  end
+
+  def my_pieces(color)
+    @grid.flatten.select { |piece| piece.color == color}
+  end
 
 end

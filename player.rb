@@ -39,6 +39,8 @@ class HumanPlayer < Player
       retry
   end
 
+  private
+
   def valid_move?(start_pos, end_pos)
     piece_to_move = @board[start_pos]
     possible_moves = piece_to_move.valid_moves

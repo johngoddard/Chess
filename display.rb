@@ -31,6 +31,8 @@ class Display
   end
 
   def colors_for(pos)
+    color = @board[pos].color
+
     if pos == @cursor_pos
       bg =  :light_red
     elsif (pos[0] + pos[1]).odd?
@@ -38,7 +40,7 @@ class Display
     else
       bg = :blue
     end
-    { background: bg, color: :white}
+    { background: bg, color: color}
   end
 
 
