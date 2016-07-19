@@ -23,11 +23,7 @@ class Pawn < Piece
   end
 
   def forward_dir
-    if @color == :white
-      -1
-    else
-      1
-    end
+    @color == :white ? -1 : 1
   end
 
   def forward_steps

@@ -2,27 +2,27 @@ require_relative "board"
 
 class Game
   attr_reader :current_player
-  
+
   def initialize()
-    @board = Board.new(self)
+    @board = Board.new()
     @player1 = HumanPlayer.new(:white, @board)
     @player2 = HumanPlayer.new(:black, @board)
     @current_player = @player1
   end
 
   def play
-    while true
+    until @board.checkmate?(:white) || @board.checkmate?(:black)
       @current_player.make_move
       switch_players!
     end
+
+    switch_players!
+    @board.render(true)
+    puts "#{current_player.color} wins!"
   end
 
   def switch_players!
-    if @current_player == @player2
-      @current_player = @player1
-    else
-      @current_player = @player2
-    end
+    @current_player = (@current_player == @player1) ? @player2 : @player1
   end
 
 end

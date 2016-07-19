@@ -2,7 +2,7 @@ module Stepable
 
   def moves
     all_moves = move_diffs.map{|diff| [@pos[0] + diff[0], @pos[1] + diff[1]]}
-    all_moves.select{|move| move.all?{|pos| pos.between?(0,7)}}
+    all_moves.select{|move| @board.in_bounds?(move) && @board[move].color != @color}
   end
 
   private

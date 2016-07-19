@@ -42,10 +42,9 @@ class Display
   end
 
 
-  def render(announcement = nil)
+  def render()
     system("clear")
 
     build_grid.each{|row| puts row}
-    puts announcement
   end
 end

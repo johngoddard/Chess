@@ -35,14 +35,23 @@ class Piece
   end
 
   def symbol
-    :pawn
   end
 
   def moves
   end
 
   def dup(board)
-    return self.class.new(@color, @position, board)
+    return self.class.new(@color, @pos, board)
+  end
+
+  def valid_moves
+    test_moves = self.moves
+
+    test_moves.reject do |m|
+      test_board = @board.dup
+      test_board.move(@pos, m)
+      test_board.in_check?(@color)
+    end
   end
 
 end
@@ -63,6 +72,7 @@ class NullPiece < Piece
   end
 
   def moves
+    []
   end
 
   def color

@@ -12,7 +12,7 @@ class Board
   attr_reader :grid, :display
 
   def initialize()
-    @grid = Array.new(8) {Array.new(8)}
+    @grid = Array.new(8) {Array.new(8) {NullPiece.instance()}}
     @display = Display.new(self)
     populate
   end
@@ -29,8 +29,6 @@ class Board
           @grid[idx][i] = Pawn.new(color, [idx, i], self)
           i += 1
         end
-      else
-        @grid[idx] = Array.new(8) {NullPiece.instance()}
       end
     end
   end
@@ -54,7 +52,6 @@ class Board
 
     rescue
       puts "No piece at start position."
-#      retry
 
   end
 
@@ -68,9 +65,9 @@ class Board
     @grid[row][col] = value
   end
 
-  def render
+  def render(over = false)
     @display.render
-    @display.get_input
+    @display.get_input unless over
   end
 
   def in_bounds?(pos)
@@ -80,41 +77,38 @@ class Board
   def in_check?(color)
     king_piece = find_king(color)
     threatened_square = king_piece.pos
-    # puts "threatened_square: #{threatened_square}"
-
     valid_moves_array = []
+    
     color == :black ? color = :white : color = :black
-    @grid.each do |row|
-      row.each do |piece|
-        piece_valids = []
-        piece_valids = piece.moves if piece.color == color
-        piece_valids.each{|move| valid_moves_array << move}
-      end
-    end
 
-    # p valid_moves_array
+    my_pieces(color).each {|piece| valid_moves_array += piece.moves}
+
     return true if valid_moves_array.include?(threatened_square)
     return false
   end
 
   def find_king(color)
-    @grid.each do |row|
-      row.each do |piece|
-        return piece if piece.class == King && piece.color == color
+    my_pieces(color).select{|piece| piece.class == King}.first
+  end
+
+  def checkmate?(color)
+    if self.in_check?(color)
+      my_pieces(color).each do |piece|
+        return false if piece.valid_moves.size > 0
       end
+      true
+    else
+      false
     end
   end
 
-  def checkmate(color)
-
-  end
-
-  def valid_moves
-
+  def my_pieces(color)
+    @grid.flatten.select { |piece| piece.color == color}
   end
 
   def dup
     dup_board = Board.new
+
     @grid.each_with_index do |row, i|
       row.each_with_index do |piece, j|
         dup_board[[i,j]] = piece.dup(dup_board)
