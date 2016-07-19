@@ -16,13 +16,32 @@ class ComputerPlayer < Player
   end
 
   def make_move
+    @board.display.cursor_pos = nil
     @board.display.render
     sleep(1)
+
+    best_move = get_best_move
+    @board.move(best_move[0], best_move[1])
+  end
+
+  def move_value(move, piece)
+    return 100 if move_is_checkmate?(move, piece)
+    move_val = 0
+
+    if @board[move].color == @opponent_color
+      move_val = MAP_OF_PIECE_VALS[@board[move].symbol]
+    end
+
+    move_is_check?(move, piece) || pawn_promotion?(move, piece) ? move_val + 1 : move_val
+  end
+
+  private
+
+  def get_best_move
     piece_to_move = nil
     end_pos = nil
     best_move_val = 0
     all_moves = []
-
 
     pieces = @board.my_pieces(@color)
     pieces.each do |the_piece|
@@ -38,22 +57,13 @@ class ComputerPlayer < Player
     end
 
     if best_move_val > 0
-      @board.move(piece_to_move.pos, end_pos)
+      return [piece_to_move.pos, end_pos]
     else
       move_to_make = all_moves.sample
+      return [move_to_make[0].pos, move_to_make[1]]
       @board.move(move_to_make[0].pos, move_to_make[1])
     end
-  end
 
-  def move_value(move, piece)
-    return 100 if move_is_checkmate?(move, piece)
-    move_val = 0
-
-    if @board[move].color == @opponent_color
-      move_val = MAP_OF_PIECE_VALS[@board[move].symbol]
-    end
-
-    move_is_check?(move, piece) || pawn_promotion?(move, piece) ? move_val + 1 : move_val
   end
 
   def move_is_check?(move, piece)

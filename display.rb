@@ -5,10 +5,13 @@ require 'byebug'
 class Display
   include Cursorable
 
+  attr_accessor :cursor_pos, :valid_moves
+
   def initialize(board)
     @board = board
-    @cursor_pos = [0,0]
+    @cursor_pos = nil
     @selected = false
+    @valid_moves = []
   end
 
   def build_grid
@@ -35,6 +38,8 @@ class Display
 
     if pos == @cursor_pos
       bg =  :light_red
+    elsif @valid_moves.include?(pos)
+      bg = :green
     elsif (pos[0] + pos[1]).odd?
       bg = :light_blue
     else

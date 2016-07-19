@@ -19,7 +19,9 @@ class HumanPlayer < Player
   end
 
   def make_move
+    @display.cursor_pos = [0,0]
     moves = []
+    @display.valid_moves = []
 
     until moves.size == 2
       @display.render
@@ -27,6 +29,7 @@ class HumanPlayer < Player
 
       player_move = @display.get_input
       moves << player_move unless player_move.nil?
+      @display.valid_moves = @board[moves[0]].valid_moves if moves.size == 1
     end
 
     valid_move?(moves[0], moves[1])
