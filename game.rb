@@ -1,4 +1,6 @@
 require_relative "board"
+require_relative "player"
+require_relative "computer_player"
 
 class Game
   attr_reader :current_player
@@ -6,7 +8,7 @@ class Game
   def initialize()
     @board = Board.new()
     @player1 = HumanPlayer.new(:white, @board)
-    @player2 = HumanPlayer.new(:black, @board)
+    @player2 = ComputerPlayer.new(:black, @board)
     @current_player = @player1
   end
 

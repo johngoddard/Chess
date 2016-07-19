@@ -30,7 +30,7 @@ class Pawn < Piece
     forward_moves = []
 
     one_step = [@pos[0] + forward_dir, @pos[1]]
-    forward_moves << one_step unless !@board[one_step].symbol.nil?
+    forward_moves << one_step unless !@board.in_bounds?(one_step) || !@board[one_step].symbol.nil? 
 
     if at_start_row? && forward_moves.size == 1
       two_step = [2*forward_dir+@pos[0], @pos[1]]

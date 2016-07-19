@@ -7,7 +7,6 @@ class Player
   def initialize(color, board)
     @color = color
     @board = board
-    @display = board.display
   end
 end
 
@@ -16,6 +15,7 @@ class HumanPlayer < Player
 
   def initialize(color, board)
     super
+    @display = board.display
   end
 
   def make_move

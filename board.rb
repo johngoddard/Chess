@@ -1,6 +1,5 @@
 require_relative "piece"
 require_relative "display"
-require_relative "player"
 require_relative "rook"
 require_relative "knight"
 require_relative "bishop"
@@ -25,16 +24,23 @@ class Board
     self[start_pos] = NullPiece.instance()
 
     to_move.pos = end_pos
+
+    promote_pawn(to_move, end_pos) if pawn_promotion?(to_move, end_pos)
   end
 
   def [](pos)
     row, col = pos
+    return nil unless in_bounds?(pos)
     @grid[row][col]
   end
 
   def []=(pos, value)
     row, col = pos
     @grid[row][col] = value
+  end
+
+  def my_pieces(color)
+    @grid.flatten.select { |piece| piece.color == color}
   end
 
   def render(over = false)
@@ -79,6 +85,13 @@ class Board
     dup_board
   end
 
+  def pawn_promotion?(piece, pos)
+    if piece.is_a?(Pawn) && [0, 7].include?(pos[0])
+      return true
+    end
+    false
+  end
+
   private
 
   def populate
@@ -109,8 +122,9 @@ class Board
     my_pieces(color).select{|piece| piece.class == King}.first
   end
 
-  def my_pieces(color)
-    @grid.flatten.select { |piece| piece.color == color}
+  def promote_pawn(piece, pos)
+    self[pos] = Queen.new(piece.color, pos, self)
   end
+
 
 end
