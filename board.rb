@@ -47,8 +47,7 @@ class Board
   end
 
   def in_check?(color)
-    king_piece = find_king(color)
-    threatened_square = king_piece.pos
+    threatened_square = find_king(color).pos
     valid_moves_array = []
 
     color == :black ? color = :white : color = :black
@@ -56,7 +55,7 @@ class Board
     my_pieces(color).each {|piece| valid_moves_array += piece.moves}
 
     return true if valid_moves_array.include?(threatened_square)
-    return false
+    false
   end
 
   def checkmate?(color)
