@@ -3,6 +3,7 @@ require_relative "computer_move"
 
 class BetterComputerPlayer < ComputerPlayer
   AGGRESSIVE_FACTOR = 0.2
+  DEFENSIVE_FACTOR = 0.8
   CENTER_WEIGHT = 0.1
   MOVES_MULTIPLIER = 0.01
 
@@ -68,7 +69,7 @@ class BetterComputerPlayer < ComputerPlayer
 
     score = 0
     score += (material_value(board, color) - material_value(board, opponent_color))
-    score -= threatened_total(board, color)
+    score -= DEFENSIVE_FACTOR * threatened_total(board, color)
     score += AGGRESSIVE_FACTOR * threatened_total(board, opponent_color)
     score += CENTER_WEIGHT * center_control(board, color)
     score += MOVES_MULTIPLIER * open_moves(board, color)
