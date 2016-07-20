@@ -52,20 +52,37 @@ class Board
     pos.all?{|n| n.between?(0,7)}
   end
 
-  def in_check?(color)
-    threatened_square = find_king(color).pos
+  # def in_check?(color)
+  #   threatened_square = find_king(color).pos
+  #   valid_moves_array = []
+  #
+  #   color == :black ? color = :white : color = :black
+  #
+  #   my_pieces(color).each {|piece| valid_moves_array += piece.moves}
+  #
+  #   return true if valid_moves_array.include?(threatened_square)
+  #   false
+  # end
+
+  def threatened?(pos, color)
+    opponent_color = color == :white ? :black : :white
     valid_moves_array = []
 
-    color == :black ? color = :white : color = :black
+    my_pieces(opponent_color).each do |piece|
+      if piece.class == Pawn
+        valid_moves_array += piece.moves.select{|m| m[1] != piece.pos[1]}
+      else
+        valid_moves_array += piece.moves
+      end
+    end
 
-    my_pieces(color).each {|piece| valid_moves_array += piece.moves}
-
-    return true if valid_moves_array.include?(threatened_square)
+    return true if valid_moves_array.include?(pos)
     false
   end
 
   def checkmate?(color)
-    if self.in_check?(color)
+
+    if self.threatened?(find_king(color).pos, color)
       my_pieces(color).each{|piece| return false if piece.valid_moves.size > 0}
       true
     else
@@ -92,6 +109,10 @@ class Board
     false
   end
 
+  def find_king(color)
+    my_pieces(color).select{|piece| piece.class == King}.first
+  end
+
   private
 
   def populate
@@ -116,10 +137,6 @@ class Board
     @grid[row] = [Rook.new(color, [row, 0], self), Knight.new(color, [row, 1], self),
       Bishop.new(color, [row, 2], self), Queen.new(color, [row, 3], self), King.new(color, [row, 4], self),
       Bishop.new(color, [row, 5], self), Knight.new(color, [row, 6], self), Rook.new(color, [row, 7], self)]
-  end
-
-  def find_king(color)
-    my_pieces(color).select{|piece| piece.class == King}.first
   end
 
   def promote_pawn(piece, pos)

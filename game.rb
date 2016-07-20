@@ -7,8 +7,8 @@ class Game
 
   def initialize()
     @board = Board.new()
-    @player1 = ComputerPlayer.new(:white, @board)
-    @player2 = HumanPlayer.new(:black, @board)
+    @player1 = HumanPlayer.new(:white, @board)
+    @player2 = ComputerPlayer.new(:black, @board)
     @current_player = @player1
   end
 
@@ -19,6 +19,7 @@ class Game
     end
 
     switch_players!
+    @board.display.valid_moves = []
     @board.render(true)
     puts "#{current_player.color} wins!"
   end

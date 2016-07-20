@@ -49,7 +49,7 @@ class Piece
     test_moves.reject do |m|
       test_board = @board.dup
       test_board.move(@pos, m)
-      test_board.in_check?(@color)
+      test_board.threatened?(test_board.find_king(@color).pos, @color)
     end
   end
 

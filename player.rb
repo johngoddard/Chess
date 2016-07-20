@@ -16,12 +16,13 @@ class HumanPlayer < Player
   def initialize(color, board)
     super
     @display = board.display
+    @previous_move = [0,0]
   end
 
   def make_move
-    @display.cursor_pos = [0,0]
+    @display.cursor_pos = @previous_move
     moves = []
-    @display.valid_moves = []
+
 
     until moves.size == 2
       @display.render
@@ -35,6 +36,8 @@ class HumanPlayer < Player
     valid_move?(moves[0], moves[1])
 
     @announcement = nil
+    @previous_move = moves[1]
+    @display.valid_moves = []
     @board.move(moves[0], moves[1])
 
   rescue => e
@@ -54,7 +57,7 @@ class HumanPlayer < Player
 
   def make_announcements
     puts("#{@color.to_s}'s turn")
-    puts "#{@color} is in check!" if @board.in_check?(@color)
+    puts "#{@color} is in check!" if @board.threatened?(@board.find_king(@color).pos, @color)
     puts @announcement unless @announcement.nil?
   end
 
