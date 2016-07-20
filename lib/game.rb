@@ -9,7 +9,7 @@ class Game
   def initialize(player1, player2)
     @board = Board.new()
     @player1 = handle_player_string(player1, 1)
-    @player2 = handle_player_string(player1, 2)
+    @player2 = handle_player_string(player2, 2)
     @current_player = @player1
   end
 
@@ -42,14 +42,14 @@ class Game
       raise
     end
   end
-  
+
   def switch_players!
     @current_player = (@current_player == @player1) ? @player2 : @player1
   end
 
 end
 
-if $PROGRAM_NAME = __FILE__
+if $PROGRAM_NAME == __FILE__
   g = Game.new(ARGV[0], ARGV[1])
   g.play
 end
