@@ -52,18 +52,6 @@ class Board
     pos.all?{|n| n.between?(0,7)}
   end
 
-  # def in_check?(color)
-  #   threatened_square = find_king(color).pos
-  #   valid_moves_array = []
-  #
-  #   color == :black ? color = :white : color = :black
-  #
-  #   my_pieces(color).each {|piece| valid_moves_array += piece.moves}
-  #
-  #   return true if valid_moves_array.include?(threatened_square)
-  #   false
-  # end
-
   def threatened?(pos, color)
     opponent_color = color == :white ? :black : :white
     valid_moves_array = []
@@ -120,12 +108,10 @@ class Board
       if [0, 7].include?(idx)
         back_row(idx)
       elsif [1, 6].include?(idx)
-        i = 0
-        color = :white
-        color = :black if idx == 1
-        while i < 8
+        color = idx == 1 ? :black : :white
+
+        (0..7).each do |i|
           @grid[idx][i] = Pawn.new(color, [idx, i], self)
-          i += 1
         end
       end
     end

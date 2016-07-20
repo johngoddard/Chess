@@ -21,7 +21,7 @@ class HumanPlayer < Player
   def make_move
     @display.cursor_pos = @previous_move
     moves = []
-
+    @display.valid_moves = []
 
     until moves.size == 2
       @display.render
@@ -34,9 +34,8 @@ class HumanPlayer < Player
 
     valid_move?(moves[0], moves[1])
 
-    @announcement = nil
     @previous_move = moves[1]
-    @display.valid_moves = []
+    reset_display
     @board.move(moves[0], moves[1])
 
   rescue => e
@@ -45,6 +44,11 @@ class HumanPlayer < Player
   end
 
   private
+
+  def reset_display
+    @announcement = nil
+    @display.valid_moves = []
+  end
 
   def valid_move?(start_pos, end_pos)
     piece_to_move = @board[start_pos]
