@@ -1,13 +1,14 @@
 require_relative "board"
 require_relative "players/player"
 require_relative "players/computer_player"
+require_relative "players/better_computer_player"
 
 class Game
   attr_reader :current_player
 
   def initialize()
     @board = Board.new()
-    @player1 = HumanPlayer.new(:white, @board)
+    @player1 = BetterComputerPlayer.new(:white, @board)
     @player2 = ComputerPlayer.new(:black, @board)
     @current_player = @player1
   end
