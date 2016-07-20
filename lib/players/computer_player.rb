@@ -1,4 +1,5 @@
 require_relative "player"
+require_relative "computer_move"
 
 class ComputerPlayer < Player
   MAP_OF_PIECE_VALS = {
@@ -20,11 +21,13 @@ class ComputerPlayer < Player
   def make_move
     @board.display.cursor_pos = nil
     @board.display.render
-    sleep(1)
+    sleep(0.5)
 
     best_move = get_best_move
     @board.move(best_move[0], best_move[1])
   end
+
+  private
 
   def move_value(move, piece)
     return 100 if move_is_checkmate?(move, piece)
@@ -41,8 +44,6 @@ class ComputerPlayer < Player
 
     move_val
   end
-
-  private
 
   def threatened_difference(move, piece, color)
     current_threat = threatened_total(@board, color)
@@ -62,36 +63,31 @@ class ComputerPlayer < Player
   end
 
   def get_best_move
-    piece_to_move = nil
-    end_pos = nil
-    best_move_val = 0
-    all_moves = []
-    zero_moves = []
+    move_map = create_move_array
+
+    move_map = move_map.sort_by!{|move| move.value}.reverse
+    to_make = move_map.first
+
+    if to_make.value == 0
+      to_make = move_map.select{|move| move.value == 0}.sample
+    end
+
+    [to_make.start_pos, to_make.end_pos]
+  end
+
+  def create_move_array
+    move_map = []
 
     pieces = @board.my_pieces(@color)
-    pieces.each do |the_piece|
-      the_piece.valid_moves.each do |piece_move|
-        if move_value(piece_move, the_piece) > best_move_val
-          best_move_val = move_value(piece_move, the_piece)
-          piece_to_move = the_piece
-          end_pos = piece_move
-        end
 
-        zero_moves << [the_piece, piece_move] if move_value(piece_move, the_piece) == 0
-        all_moves << [the_piece, piece_move]
+    pieces.each do |piece|
+      piece.valid_moves.each do |piece_move|
+        value = move_value(piece_move, piece)
+        move_map << ComputerMove.new(piece.pos, piece_move, value)
       end
     end
 
-    if best_move_val > 0
-      return [piece_to_move.pos, end_pos]
-    elsif zero_moves.size > 0
-      move_to_make = zero_moves.sample
-      return [move_to_make[0].pos, move_to_make[1]]
-    else
-      move_to_make = all_moves.sample
-      return [move_to_make[0].pos, move_to_make[1]]
-    end
-
+    move_map
   end
 
   def move_is_check?(move, piece)
