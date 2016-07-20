@@ -6,10 +6,10 @@ require_relative "players/better_computer_player"
 class Game
   attr_reader :current_player
 
-  def initialize(player1, player2)
+  def initialize(player1, player2, level1, level2)
     @board = Board.new()
-    @player1 = handle_player_string(player1, 1)
-    @player2 = handle_player_string(player2, 2)
+    @player1 = handle_player_string(player1, 1, level1 || 1)
+    @player2 = handle_player_string(player2, 2, level2 || 1)
     @current_player = @player1
   end
 
@@ -27,7 +27,7 @@ class Game
 
   private
 
-  def handle_player_string(player_string, player_num)
+  def handle_player_string(player_string, player_num, level)
     colors = [:white, :black]
     player_color = colors[player_num - 1]
 
@@ -37,7 +37,7 @@ class Game
     when "c"
       return ComputerPlayer.new(player_color, @board)
     when "b"
-      return BetterComputerPlayer.new(player_color, @board)
+      return BetterComputerPlayer.new(player_color, @board, level.to_i)
     else
       raise
     end
@@ -50,6 +50,6 @@ class Game
 end
 
 if $PROGRAM_NAME == __FILE__
-  g = Game.new(ARGV[0], ARGV[1])
+  g = Game.new(ARGV[0], ARGV[1], ARGV[2], ARGV[3])
   g.play
 end
