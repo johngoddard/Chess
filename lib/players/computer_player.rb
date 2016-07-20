@@ -29,16 +29,20 @@ class ComputerPlayer < Player
 
   private
 
-  def board_score(board, color)
-    opponent_color = (color == :white) ? :black : :white
-    return 1000 if board.find_king(opponent_color).nil? || board.checkmate?(opponent_color)
+  def move_value(move, piece)
+    return 100 if move_is_checkmate?(move, piece)
+    move_val = 0
 
-    score = 0
-    score += (material_value(board, color) - material_value(board, opponent_color))
-    score -= threatened_total(board, color)
-    score += AGGRESSIVE_FACTOR * threatened_total(board, opponent_color)
+    if @board[move].color == @opponent_color
+      move_val = MAP_OF_PIECE_VALS[@board[move].symbol]
+    end
 
-    score
+    move_val += 8 if pawn_promotion?(move, piece)
+    move_val -= MAP_OF_PIECE_VALS[piece.symbol] if threatened?(move, piece)
+    move_val += threatened_difference(move, piece, @color)
+    move_val -= AGGRESSIVE_FACTOR * threatened_difference(move, piece, @opponent_color)
+
+    move_val
   end
 
   def threatened_difference(move, piece, color)
@@ -75,8 +79,7 @@ class ComputerPlayer < Player
 
     pieces.each do |piece|
       piece.valid_moves.each do |piece_move|
-        # value = move_value(piece_move, piece)
-        value = board_score(move_test_board(piece, piece_move), color)
+        value = move_value(piece_move, piece)
         move_map << ComputerMove.new(piece.pos, piece_move, value)
       end
     end
