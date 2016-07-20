@@ -6,10 +6,10 @@ require_relative "players/better_computer_player"
 class Game
   attr_reader :current_player
 
-  def initialize()
+  def initialize(player1, player2)
     @board = Board.new()
-    @player1 = BetterComputerPlayer.new(:white, @board)
-    @player2 = ComputerPlayer.new(:black, @board)
+    @player1 = handle_player_string(player1, 1)
+    @player2 = handle_player_string(player1, 2)
     @current_player = @player1
   end
 
@@ -25,11 +25,31 @@ class Game
     puts "#{current_player.color} wins!"
   end
 
+  private
+
+  def handle_player_string(player_string, player_num)
+    colors = [:white, :black]
+    player_color = colors[player_num - 1]
+
+    case player_string
+    when "h"
+      return HumanPlayer.new(player_color, @board)
+    when "c"
+      return ComputerPlayer.new(player_color, @board)
+    when "b"
+      return BetterComputerPlayer.new(player_color, @board)
+    else
+      raise
+    end
+  end
+  
   def switch_players!
     @current_player = (@current_player == @player1) ? @player2 : @player1
   end
 
 end
 
-g = Game.new
-g.play
+if $PROGRAM_NAME = __FILE__
+  g = Game.new(ARGV[0], ARGV[1])
+  g.play
+end
