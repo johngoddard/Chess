@@ -1,6 +1,6 @@
 require_relative "board"
-require_relative "player"
-require_relative "computer_player"
+require_relative "players/player"
+require_relative "players/computer_player"
 
 class Game
   attr_reader :current_player

@@ -1,5 +1,5 @@
 require 'colorize'
-require_relative 'cursorable'
+require_relative 'modules/cursorable'
 require 'byebug'
 
 class Display

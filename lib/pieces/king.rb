@@ -1,4 +1,4 @@
-require_relative "stepable"
+require_relative "../modules/stepable"
 require_relative "piece"
 
 class King < Piece

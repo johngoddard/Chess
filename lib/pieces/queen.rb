@@ -1,5 +1,5 @@
 require_relative "piece"
-require_relative "slideable"
+require_relative "../modules/slideable"
 
 class Queen < Piece
   include Slideable

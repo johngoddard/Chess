@@ -1,6 +1,5 @@
 require "byebug"
 
-
 class Player
   attr_reader :color
 
