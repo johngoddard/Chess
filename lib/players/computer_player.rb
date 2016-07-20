@@ -66,12 +66,9 @@ class ComputerPlayer < Player
     move_map = create_move_array
 
     move_map = move_map.sort_by!{|move| move.value}.reverse
-    to_make = move_map.first
-
-    if to_make.value == 0
-      to_make = move_map.select{|move| move.value == 0}.sample
-    end
-
+    best_moves = move_map.select{|move| move.value == move_map.first.value}
+    to_make = best_moves.sample
+  
     [to_make.start_pos, to_make.end_pos]
   end
 
