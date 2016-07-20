@@ -34,7 +34,7 @@ class ComputerPlayer < Player
       move_val = MAP_OF_PIECE_VALS[@board[move].symbol]
     end
 
-    move_val += 1 if pawn_promotion?(move, piece)
+    move_val += 8 if pawn_promotion?(move, piece)
     move_val -= MAP_OF_PIECE_VALS[piece.symbol] if threatened?(move, piece)
     move_val += threatened_difference(move, piece, @color)
     move_val -= AGGRESSIVE_FACTOR * threatened_difference(move, piece, @opponent_color)
