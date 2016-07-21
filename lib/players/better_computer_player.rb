@@ -12,7 +12,7 @@ class BetterComputerPlayer < ComputerPlayer
   def initialize(color, board, level)
     super(color, board)
     @mini_level = level
-    @df = (color == :black)? 0.7 : 0.9
+    # @df = (color == :black)? 0.7 : 0.9
   end
 
   private
@@ -70,7 +70,7 @@ class BetterComputerPlayer < ComputerPlayer
 
     score = 0
     score += (material_value(board, color) - material_value(board, opponent_color))
-    score -= @df * threatened_total(board, color)
+    score -= DEFENSIVE_FACTOR * threatened_total(board, color)
     score += AGGRESSIVE_FACTOR * threatened_total(board, opponent_color)
     score += CENTER_WEIGHT * center_control(board, color)
     score += CENTER_WEIGHT * 0.5 * center_threat(board, color)
