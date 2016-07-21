@@ -12,6 +12,7 @@ class BetterComputerPlayer < ComputerPlayer
   def initialize(color, board, level)
     super(color, board)
     @mini_level = level
+    @df = (color == :black)? 0.7 : 0.9
   end
 
   private
@@ -69,9 +70,10 @@ class BetterComputerPlayer < ComputerPlayer
 
     score = 0
     score += (material_value(board, color) - material_value(board, opponent_color))
-    score -= DEFENSIVE_FACTOR * threatened_total(board, color)
+    score -= @df * threatened_total(board, color)
     score += AGGRESSIVE_FACTOR * threatened_total(board, opponent_color)
     score += CENTER_WEIGHT * center_control(board, color)
+    score += CENTER_WEIGHT * 0.5 * center_threat(board, color)
     score += MOVES_MULTIPLIER * open_moves(board, color)
     score
   end
@@ -85,6 +87,18 @@ class BetterComputerPlayer < ComputerPlayer
     end
 
     control_score
+  end
+
+  def center_threat(board, color)
+    center_squares_threatened = []
+
+    board.my_pieces(color).each do |piece|
+      piece.valid_moves.each do |move|
+        center_squares_threatened << move if CENTER_SQUARES.include?(move)
+      end
+    end
+
+    center_squares_threatened.uniq.size
   end
 
   def open_moves(board, color)
