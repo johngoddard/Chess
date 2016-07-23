@@ -61,5 +61,15 @@ describe Board do
     end
   end
 
+  describe "#in_bounds?" do
+    it "returns true for a position on the board" do
+      expect(board.in_bounds?([0,0])).to be true
+    end
+
+    it "returns false for a position not on the board" do
+      expect(board.in_bounds?([8,0])).to be false
+    end
+  end
+
 
 end
