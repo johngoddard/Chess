@@ -135,8 +135,6 @@ describe Board do
       dup.move([7,4], [6,5])
       expect(board.find_king(:white).pos).to eq([7,4])
     end
-
-
   end
 
 end
