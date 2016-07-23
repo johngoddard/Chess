@@ -17,7 +17,7 @@ class Board
   end
 
   def move(start_pos, end_pos)
-    raise if self[start_pos] == nil
+    raise "There is no piece there" if self[start_pos] == NullPiece.instance()
     to_move = self[start_pos]
 
     self[end_pos] = to_move
