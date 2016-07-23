@@ -51,9 +51,9 @@ describe Board do
     end
 
     context "after a piece has been taken" do
-      before(:each){
+      before(:each) do
         board.move([6,1], [1,1])
-      }
+      end
 
       it "doesn't return pieces that have been taken" do
         expect(board.my_pieces(:black).size).to eq(15)
@@ -71,5 +71,72 @@ describe Board do
     end
   end
 
+  describe "#threatened" do
+    before(:each) do
+      board.move([6,3], [5,4])
+    end
+
+    it "returns true for a threatened position" do
+      expect(board.threatened?([1,3], :black)).to be true
+    end
+
+    it "returns false for a non threatened position" do
+      expect(board.threatened?([1,4], :black)).to be false
+    end
+  end
+
+  describe "#checkmate?" do
+    it "returns false when there isn't a checkmate" do
+      expect(board.checkmate?(:white)).to be false
+    end
+
+    context "when there is a checkmate" do
+      before(:each) do
+        board.move([6,5], [5,5])
+        board.move([1,4], [2,4])
+        board.move([6,6], [4,6])
+        board.move([0,3], [4,7])
+      end
+
+      it "returns true when a player is in checkmate" do
+        expect(board.checkmate?(:white)).to be true
+      end
+    end
+  end
+
+  describe "#find_king" do
+    it "finds the kings" do
+      board.move([0,4],[4,4])
+      expect(board.find_king(:black).pos).to eq([4,4])
+    end
+  end
+
+  describe "#dup" do
+    before(:each) do
+      board.move([6,5], [5,5])
+      board.move([1,4], [2,4])
+      board.move([6,6], [4,6])
+      board.move([0,3], [3,6])
+    end
+
+    it "copies pieces into the correct positions" do
+      dup = board.dup
+      copy = true
+      dup.grid.flatten.each_with_index do |piece,idx|
+        original_piece = board.grid.flatten[idx]
+        copy = false unless piece.class == original_piece.class && piece.color ==
+        original_piece.color
+      end
+      expect(copy).to be true
+    end
+
+    it "moves on the duplicate board don't affect the original" do
+      dup = board.dup
+      dup.move([7,4], [6,5])
+      expect(board.find_king(:white).pos).to eq([7,4])
+    end
+
+
+  end
 
 end
