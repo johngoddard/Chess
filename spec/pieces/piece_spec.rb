@@ -18,4 +18,10 @@ describe Piece do
       expect(board[[5,6]].valid_moves.size).to eq(0)
     end
   end
+
+  describe "#to_s" do
+    it "returns a string of the piece's value" do
+      expect(board[[0,3]].to_s).to eq(" \u{265B} ")
+    end
+  end
 end
