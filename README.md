@@ -7,7 +7,7 @@ This is a terminal based implementation of chess that allows users to play again
 The chess game is played entirely in the terminal. Users can use the arrows keys to select a piece to move.
 After selecting a piece, valid moves are highlighted. After each move, methods run to check if the board is in check or checkmate and game announcements are displayed when appropriate. 
 
-## Computer opponents
+## Computer opponents & AI
 
 There are 2 differnt AI players a human player can play against. Both AIs have a system for scoring the board that take into account the following factors: 
 - Material differences
